@@ -54,6 +54,8 @@ public class AmazonTest {
         String actualQuantity = select.getFirstSelectedOption().getText();
         String expectedQuantity = "2";
 
+        HandleWait.staticWait(3);
+
         double actualTotalPrice = Double.parseDouble(driver.findElement(By.xpath("(//span[@class='a-price-whole'])[1]")).getText());
         double actulaTotalPriceDecimal = Double.parseDouble(driver.findElement(By.xpath("(//span[@class='a-price-fraction'])[1]")).getText()) / 100;
         actualTotalPrice += actulaTotalPriceDecimal;
@@ -79,7 +81,7 @@ public class AmazonTest {
         Assert.assertEquals(actualQuantity, expectedQuantity);
         Assert.assertEquals(actualTotalPrice, expectedTotalPrice);
 
-        HandleWait.staticWait(5);
+        HandleWait.staticWait(1);
 
     }
 }
