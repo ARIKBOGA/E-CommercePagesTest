@@ -15,6 +15,11 @@ import utilities.HandleWait;
 public class AmazonTest {
     static WebDriver driver;
 
+    @AfterMethod
+    public void tearDown() {
+        driver.quit();
+    }
+
     @Test
     public void amazonTest() {
         driver = Driver.getDriver();
@@ -48,6 +53,7 @@ public class AmazonTest {
         select = new Select(driver.findElement(By.xpath("//select[@id='quantity']")));
         String actualQuantity = select.getFirstSelectedOption().getText();
         String expectedQuantity = "2";
+
         double actualTotalPrice = Double.parseDouble(driver.findElement(By.xpath("(//span[@class='a-price-whole'])[1]")).getText());
         double actulaTotalPriceDecimal = Double.parseDouble(driver.findElement(By.xpath("(//span[@class='a-price-fraction'])[1]")).getText()) / 100;
         actualTotalPrice += actulaTotalPriceDecimal;
@@ -64,6 +70,7 @@ public class AmazonTest {
         // 6.	Assert that the total price and quantity has been correctly changed
         expectedQuantity = "1";
         actualQuantity = select.getFirstSelectedOption().getText();
+
         actualTotalPrice = Double.parseDouble(driver.findElement(By.xpath("(//span[@class='a-price-whole'])[1]")).getText());
         actulaTotalPriceDecimal = Double.parseDouble(driver.findElement(By.xpath("(//span[@class='a-price-fraction'])[1]")).getText()) / 100;
         actualTotalPrice += actulaTotalPriceDecimal;
@@ -74,10 +81,5 @@ public class AmazonTest {
 
         HandleWait.staticWait(5);
 
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
     }
 }
