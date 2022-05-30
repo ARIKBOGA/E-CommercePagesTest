@@ -73,6 +73,7 @@ public class AmazonTest {
         Assert.assertEquals(actualTotalPrice, expectedTotalPrice);
 
         HandleWait.staticWait(5);
+
     }
 
     @AfterMethod
