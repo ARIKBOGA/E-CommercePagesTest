@@ -8,7 +8,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import utilities.Driver;
 
-public class Task2 {
+public class MoneyGaming {
     static WebDriver driver;
 
     @AfterMethod
