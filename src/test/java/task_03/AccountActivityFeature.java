@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+import utilities.ConfigurationReader;
 import utilities.Driver;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class AccountActivityFeature {
 
         // Requirements document shows the "Activity" word starts with lowercase "a"
         // I have changed the expected title to make it pass
-        Assert.assertEquals(driver.getTitle(), "Zero - Account Activity");
+        Assert.assertEquals(driver.getTitle(), ConfigurationReader.getProperty("activityTitle"));
 
 
         // locate dropdown select menu

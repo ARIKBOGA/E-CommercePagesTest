@@ -43,7 +43,7 @@ public class AccountSummaryFeature {
 
         // Requirements document shows the "Summary" word starts with lowercase "s"
         // I have changed the expected title to make it pass
-        Assert.assertEquals(driver.getTitle(), "Zero - Account Summary");
+        Assert.assertEquals(driver.getTitle(), ConfigurationReader.getProperty("summaryTitle"));
 
         /*
         Account summary page should have to following account types: Cash Accounts, Investment
