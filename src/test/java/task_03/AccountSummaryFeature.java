@@ -29,11 +29,10 @@ public class AccountSummaryFeature extends TestBase {
 
     private boolean containsAll(By locator, String... arr) {
         List<WebElement> elementList = driver.findElements(locator);
-        List<String> expectedContainsList = new ArrayList<>(Arrays.asList(arr));
         return elementList.stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList())
-                .containsAll(expectedContainsList);
+                .containsAll(Arrays.asList(arr));
     }
 
     @AfterClass
