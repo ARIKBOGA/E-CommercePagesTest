@@ -10,9 +10,7 @@ import utilities.ConfigurationReader;
 import utilities.Driver;
 import utilities.TestBase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccountSummaryFeature extends TestBase {
@@ -28,8 +26,7 @@ public class AccountSummaryFeature extends TestBase {
     }
 
     private boolean containsAll(By locator, String... arr) {
-        List<WebElement> elementList = driver.findElements(locator);
-        return elementList.stream()
+        return driver.findElements(locator).stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList())
                 .containsAll(Arrays.asList(arr));
