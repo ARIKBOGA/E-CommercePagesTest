@@ -9,12 +9,13 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import utilities.ConfigurationReader;
 import utilities.Driver;
+import utilities.TestBase;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AccountActivityFeature {
+public class AccountActivityFeature extends TestBase {
     static WebDriver driver = Driver.getDriver();
 
     @AfterClass

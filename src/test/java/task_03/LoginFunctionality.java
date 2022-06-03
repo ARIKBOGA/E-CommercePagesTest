@@ -1,37 +1,21 @@
 package task_03;
 
-import com.google.common.io.Files;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import utilities.ConfigurationReader;
 import utilities.Driver;
+import utilities.TestBase;
 
-import java.io.File;
-import java.io.IOException;
-
-public class LoginFunctionality {
+public class LoginFunctionality extends TestBase {
     private static final WebDriver driver = Driver.getDriver();
 
     @AfterClass
     private void tearDown() {
         driver.quit();
-    }
-
-    @AfterMethod // get screenshot if the test is failed
-    private void failureRecord(ITestResult result) {
-        if (ITestResult.FAILURE == result.getStatus()) {
-            TakesScreenshot camera = (TakesScreenshot) driver;
-            File screenshot = camera.getScreenshotAs(OutputType.FILE);
-            try {
-                Files.move(screenshot, new File("resources/screenShots" + result.getName() + ".png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public static void login(String username, String password) {
