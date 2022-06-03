@@ -1,20 +1,37 @@
 package task_03;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.google.common.io.Files;
+import org.openqa.selenium.*;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import utilities.ConfigurationReader;
 import utilities.Driver;
 
+import java.io.File;
+import java.io.IOException;
+
 public class LoginFunctionality {
-    static WebDriver driver = Driver.getDriver();
+    private static final WebDriver driver = Driver.getDriver();
 
     @AfterClass
-    public void tearDown() {
-        driver.close();
+    private void tearDown() {
+        driver.quit();
+    }
+
+    @AfterMethod // get screenshot if the test is failed
+    private void failureRecord(ITestResult result) {
+        if (ITestResult.FAILURE == result.getStatus()) {
+            TakesScreenshot camera = (TakesScreenshot) driver;
+            File screenshot = camera.getScreenshotAs(OutputType.FILE);
+            try {
+                Files.move(screenshot, new File("resources/screenShots" + result.getName() + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void login(String username, String password) {
@@ -39,58 +56,55 @@ public class LoginFunctionality {
         driver.findElement(By.xpath("//input[@value='Sign in']")).click();
     }
 
-    @Test(priority = 2)
-    public void loginWithValidCredentials() {
+    private void checkAlertMessage() {
+        String actualAlertMessage = driver.findElement(By.xpath("//form[@id='login_form']/div[1]")).getText();
+        String expectedAlertMessage = ConfigurationReader.getProperty("expectedAlertMessage");
+        Assert.assertEquals(actualAlertMessage, expectedAlertMessage);
+    }
 
-        /*
-         According to requirements document after logging in and getting back with step-back button
-         Account summary page should be displayed, but it doesn't work like that. So, test fails.
-         */
-
-        String username = ConfigurationReader.getProperty("username");
-        String password = ConfigurationReader.getProperty("password");
-        login(username, password);
-        driver.navigate().back();
+    private void checkUrlIfCorrect() {
         String currentUrl = driver.getCurrentUrl();
         String expectedUrl = "http://zero.webappsecurity.com/bank/account-summary.html";
         Assert.assertEquals(currentUrl, expectedUrl);
     }
 
+    @Test(priority = 2)
+    public void loginWithValidCredentials() {
+        /*
+         According to requirements document, Account summary page should be displayed
+         after logging in and getting back with step-back button,
+         but it doesn't work like that.
+         So, test fails.
+         */
+        login(ConfigurationReader.getProperty("username"), ConfigurationReader.getProperty("password"));
+
+        // get back to get rid of the security problem
+        driver.navigate().back();
+
+        checkUrlIfCorrect();
+    }
+
     @Test
     public void loginWithInvalidUsernameValidPassword() {
-        String username = ConfigurationReader.getProperty("invalidUsername");
-        String password = ConfigurationReader.getProperty("password");
-        login(username, password);
-        String actualAlertMessage = driver.findElement(By.xpath("//form[@id='login_form']/div[1]")).getText();
-        String expectedAlertMessage = ConfigurationReader.getProperty("expectedAlertMessage");
-        Assert.assertEquals(actualAlertMessage, expectedAlertMessage);
+        login(ConfigurationReader.getProperty("invalidUsername"), ConfigurationReader.getProperty("password"));
+        checkAlertMessage();
     }
 
     @Test
     public void loginWithValidUsernameInvalidPassword() {
-        String username = ConfigurationReader.getProperty("username");
-        String password = ConfigurationReader.getProperty("invalidPassword");
-        login(username, password);
-        String actualAlertMessage = driver.findElement(By.xpath("//form[@id='login_form']/div[1]")).getText();
-        String expectedAlertMessage = ConfigurationReader.getProperty("expectedAlertMessage");
-        Assert.assertEquals(actualAlertMessage, expectedAlertMessage);
+        login(ConfigurationReader.getProperty("username"), ConfigurationReader.getProperty("invalidPassword"));
+        checkAlertMessage();
     }
 
     @Test
     public void loginWithValidUsernameBlankPassword() {
-        String username = ConfigurationReader.getProperty("username");
-        login(username, null);
-        String actualAlertMessage = driver.findElement(By.xpath("//form[@id='login_form']/div[1]")).getText();
-        String expectedAlertMessage = ConfigurationReader.getProperty("expectedAlertMessage");
-        Assert.assertEquals(actualAlertMessage, expectedAlertMessage);
+        login(ConfigurationReader.getProperty("username"), null);
+        checkAlertMessage();
     }
 
     @Test
     public void loginWithBlankUsernameValidPassword() {
-        String password = ConfigurationReader.getProperty("password");
-        login(null, password);
-        String actualAlertMessage = driver.findElement(By.xpath("//form[@id='login_form']/div[1]")).getText();
-        String expectedAlertMessage = ConfigurationReader.getProperty("expectedAlertMessage");
-        Assert.assertEquals(actualAlertMessage, expectedAlertMessage);
+        login(null, ConfigurationReader.getProperty("password"));
+        checkAlertMessage();
     }
 }
