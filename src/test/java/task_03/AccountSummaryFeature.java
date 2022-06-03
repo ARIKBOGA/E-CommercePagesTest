@@ -8,12 +8,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import utilities.ConfigurationReader;
 import utilities.Driver;
+import utilities.TestBase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AccountSummaryFeature {
+public class AccountSummaryFeature extends TestBase {
     static WebDriver driver = Driver.getDriver();
 
     public static void login() {
@@ -23,6 +25,15 @@ public class AccountSummaryFeature {
 
         // get back to get rid of security problem
         driver.navigate().back();
+    }
+
+    private boolean containsAll(By locator, String... arr) {
+        List<WebElement> elementList = driver.findElements(locator);
+        List<String> expectedContainsList = new ArrayList<>(Arrays.asList(arr));
+        return elementList.stream()
+                .map(WebElement::getText)
+                .collect(Collectors.toList())
+                .containsAll(expectedContainsList);
     }
 
     @AfterClass
@@ -49,24 +60,16 @@ public class AccountSummaryFeature {
         Account summary page should have to following account types: Cash Accounts, Investment
         Accounts, Credit Accounts, Loan Accounts.
         */
-        List<WebElement> elementList = driver.findElements(By.xpath("//div[@class='offset2 span8']/h2"));
-        List<String> expectedContainsList = new ArrayList<>(List.of("Cash Accounts", "Investment Accounts", "Credit Accounts", "Loan Accounts"));
-        boolean containsAll = elementList.stream()
-                .map(WebElement::getText)
-                .collect(Collectors.toList())
-                .containsAll(expectedContainsList);
-        Assert.assertTrue(containsAll);
+        By accountTypesOnSummaryPege = By.xpath("//div[@class='offset2 span8']/h2");
+        Assert.assertTrue(containsAll(accountTypesOnSummaryPege,
+                "Cash Accounts", "Investment Accounts", "Credit Accounts", "Loan Accounts"));
 
         /*
         Credit Accounts table must have columns
         Account, Credit Card and Balance.
         */
-        elementList = driver.findElements(By.xpath("(//div[@class='board-content'])[3]//thead//th"));
-        expectedContainsList = new ArrayList<>(List.of("Account", "Credit Card", "Balance"));
-        containsAll = elementList.stream()
-                .map(WebElement::getText)
-                .collect(Collectors.toList())
-                .containsAll(expectedContainsList);
-        Assert.assertTrue(containsAll);
+        By creditAccountTable = By.xpath("(//div[@class='board-content'])[3]//thead//th");
+        Assert.assertTrue(containsAll(creditAccountTable,
+                "Account", "Credit Card", "Balance"));
     }
 }
