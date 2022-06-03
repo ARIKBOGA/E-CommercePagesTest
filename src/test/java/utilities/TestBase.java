@@ -17,13 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class TestBase {
     protected WebDriver driver = Driver.getDriver();
 
-    @BeforeClass
-    public void setDriver() {
-        WebDriverManager.chromedriver().setup();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-    }
-
     @AfterMethod
     public void failureRecord(ITestResult result) {
         if (ITestResult.FAILURE == result.getStatus()) {
@@ -36,9 +29,17 @@ public class TestBase {
             }
         }
     }
+/*
+    @BeforeClass
+    public void setDriver() {
+        WebDriverManager.chromedriver().setup();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    }
 
     @AfterClass
     public void tearDown() {
         driver.quit();
     }
+ */
 }
